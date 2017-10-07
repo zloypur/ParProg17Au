@@ -45,7 +45,7 @@ public class Tests{
             }else{
                 System.out.println("not deleted");
             }
-            assertEquals("Невидимый файл виден ", result[filePos], hiddenFile);
+            assertEquals("Невидимый файл не виден ", result[filePos], hiddenFile);
         }
        catch(IOException ex){
             System.out.println(ex.getMessage());
