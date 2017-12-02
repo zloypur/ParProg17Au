@@ -167,12 +167,27 @@ public class ArrayList<T> implements Iterable<T>{
 
     @Override
     public boolean equals(Object obj) {
+        if(obj == null)
+            return false;
+        if(obj == this)
+            return true;
+        if(obj.getClass().getName().equals(this.getClass().getName())) {
+            ArrayList<T> list = (ArrayList<T>) obj;
+            if(size == list.size) {
+                for (int i = 0; i < size; i++)
+                    if (!data[i].equals(list.data[i]))
+                        return false;
+                return true;
+            }else
+                return false;
+        }
         return super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        final int prime = 3;
+        return (size*capacity*capacity - 1)*size*capacity / prime;
     }
 
     public ListIterator<T> iterator(){
