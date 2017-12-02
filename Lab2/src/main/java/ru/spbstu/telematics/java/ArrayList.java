@@ -66,26 +66,26 @@ public class ArrayList<T> implements Iterable<T>{
         }
 
         public T next() throws NoSuchElementException {
-            if(index < size - 1)
-                return  data[++index];
+            if(index < size)
+                return  data[index++];
             else
                 throw new NoSuchElementException();
 
         }
 
         public T previous() throws NoSuchElementException {
-            if(index > 0)
-                return  data[--index];
+            if(index >= 0)
+                return  data[index--];
             else
                 throw new NoSuchElementException();
         }
 
         public boolean hasNext() {
-            return (index + 1) < size;
+            return index < size;
         }
 
         public boolean hasPrevious() {
-            return (index - 1) > 0;
+            return index > 0;
         }
     }
 
@@ -116,7 +116,7 @@ public class ArrayList<T> implements Iterable<T>{
                 resize();
             size++;
             System.arraycopy(data, index, data, index + 1, size - index - 1);
-            data[size - 1] = element;
+            data[index] = element;
         }else
             throw new IndexOutOfBoundsException();
         return true;
