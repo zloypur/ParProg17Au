@@ -1,8 +1,8 @@
 package ru.spbstu.telematics.java;
 
-import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.lang.IndexOutOfBoundsException;
 
 public class ArrayList<T> implements Iterable<T>{
 
@@ -81,26 +81,88 @@ public class ArrayList<T> implements Iterable<T>{
         }
 
         public boolean hasNext() {
-            return (index + 1 < size) ? true : false;
+            return (index + 1) < size;
         }
 
         public boolean hasPrevious() {
-            return (index - 1 > 0) ? true : false;
+            return (index - 1) > 0;
         }
     }
 
-    public int getSize(){
+    public int size(){
         return size;
     }
 
+    private boolean checkCapacity(){ return (capacity - size) > 1; }
 
-
-    private void resize(){
-
+    private void resize() {
+        int tmpCapacity = (capacity * 3) / 2 + 1;
+        T[] tmpData = (T[]) new Object[tmpCapacity];
+        System.arraycopy(data, 0, tmpData, 0, size);
+        capacity = tmpCapacity;
+        data = tmpData;
     }
 
     public boolean add(T element){
+        if(!checkCapacity())
+            resize();
+        data[size++] = element;
+        return true;
+    }
 
+    public boolean add(int index, T element) throws IndexOutOfBoundsException {
+        if(index > -1 && index < size) {
+            if(!checkCapacity())
+                resize();
+            size++;
+            System.arraycopy(data, index, data, index + 1, size - index - 1);
+            data[size - 1] = element;
+        }else
+            throw new IndexOutOfBoundsException();
+        return true;
+    }
+
+    public T set(int index, T element) throws IndexOutOfBoundsException {
+        if(index > -1 && index < size){
+            T tmp = data[index];
+            data[index] = element;
+            return tmp;
+        }else
+            throw new IndexOutOfBoundsException();
+    }
+
+    public T remove(int index) throws IndexOutOfBoundsException {
+        if(index > -1 && index < size){
+            T tmp = data[index];
+            System.arraycopy(data, index + 1, data, index, size - index - 1);
+            data[--size] = null;
+            return tmp;
+        }else
+            throw new IndexOutOfBoundsException();
+    }
+
+    public boolean remove(Object o){
+        for(int i = 0; i < size; i++) {
+            if (o.equals(data[i])) {
+                remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean contains(Object o){
+        for(int i = 0; i < size; i++)
+            if (o.equals(data[i]))
+                return true;
+        return false;
+    }
+
+    public T get(int index) throws IndexOutOfBoundsException{
+        if(index > -1 && index < size)
+            return data[index];
+        else
+            throw new IndexOutOfBoundsException();
     }
 
     @Override
