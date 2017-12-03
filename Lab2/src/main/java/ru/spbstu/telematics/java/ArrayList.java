@@ -26,62 +26,72 @@ public class ArrayList<T> implements Iterable<T>{
     public class ArrayListIterator implements ListIterator<T>{
 
         int index;
+        int lastReturn;
 
         ArrayListIterator(){
             index = 0;
+            lastReturn = -1;
         }
 
         public void add(T t) {
-            if(capacity - size > 1) {
+            if(capacity - size > 0) {
                 int tmpCapacity = (capacity * 3) / 2 + 1;
                 T[] tmpData = (T[]) new Object[tmpCapacity];
                 System.arraycopy(data, 0, tmpData, 0, size);
                 capacity = tmpCapacity;
                 data = tmpData;
             }
-            data[size++] =  t;
+            System.arraycopy(data, index, data, index + 1, size - index);
+            data[index++] =  t;
+            lastReturn = -1;
+            size++;
         }
 
-        public void remove() {
-            System.arraycopy(data, index + 1, data, index, size - index - 1);
-            data[--size] = null;
+        public void remove() throws IllegalStateException{
+            if(lastReturn > -1) {
+                System.arraycopy(data, lastReturn + 1, data, lastReturn, size - lastReturn - 1);
+                data[--size] = null;
+            }else
+                throw new IllegalStateException();
         }
 
-        public void set(T t) {
-            data[index] = (T) t;
+        public void set(T t) throws IllegalStateException{
+            if(lastReturn > -1)
+                data[lastReturn] = t;
+            else
+                throw new IllegalStateException();
         }
 
-        public int nextIndex() throws NoSuchElementException {
+        public int nextIndex() {
             if(index < size - 1)
-                return index + 1;
+                return index;
             else
-                throw new NoSuchElementException();
+                return size;
         }
 
-        public int previousIndex() throws NoSuchElementException {
-            if(index > 0)
-                return index - 1;
-            else
-                throw new NoSuchElementException();
+        public int previousIndex() {
+            return index - 1;
         }
 
         public T next() throws NoSuchElementException {
-            if(index < size)
-                return  data[index++];
-            else
+            if(index < size) {
+                lastReturn = index;
+                return data[index++];
+            }else
                 throw new NoSuchElementException();
 
         }
 
         public T previous() throws NoSuchElementException {
-            if(index >= 0)
-                return  data[index--];
-            else
+            if(index > -1) {
+                lastReturn = --index;
+                return data[index];
+            }else
                 throw new NoSuchElementException();
         }
 
         public boolean hasNext() {
-            return index < size;
+            return index < size - 1;
         }
 
         public boolean hasPrevious() {
@@ -93,7 +103,7 @@ public class ArrayList<T> implements Iterable<T>{
         return size;
     }
 
-    private boolean checkCapacity(){ return (capacity - size) > 1; }
+    private boolean checkCapacity(){ return (capacity - size) > 0; }
 
     private void resize() {
         int tmpCapacity = (capacity * 3) / 2 + 1;
@@ -176,6 +186,16 @@ public class ArrayList<T> implements Iterable<T>{
             if(size == list.size) {
                 for (int i = 0; i < size; i++)
                     if (!data[i].equals(list.data[i]))
+                        return false;
+                return true;
+            }else
+                return false;
+        }
+        if(obj.getClass().getName().equals(java.util.ArrayList.class.getName())) {
+            java.util.ArrayList<T> list = (java.util.ArrayList<T>) obj;
+            if (size == list.size()) {
+                for (int i = 0; i < size; i++)
+                    if (!data[i].equals(list.get(i)))
                         return false;
                 return true;
             }else
