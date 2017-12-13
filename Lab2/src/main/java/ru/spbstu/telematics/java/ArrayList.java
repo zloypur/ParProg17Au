@@ -6,10 +6,10 @@ import java.lang.IndexOutOfBoundsException;
 
 public class ArrayList<T> implements Iterable<T>{
 
-    T[] data;
+    private T[] data;
 
-    int size;
-    int capacity;
+    private int size;
+    private int capacity;
 
     ArrayList() {
         capacity = 1;
@@ -25,8 +25,8 @@ public class ArrayList<T> implements Iterable<T>{
 
     public class ArrayListIterator implements ListIterator<T>{
 
-        int index;
-        int lastReturn;
+        private int index;
+        private int lastReturn;
 
         ArrayListIterator(){
             index = 0;
