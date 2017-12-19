@@ -6,6 +6,7 @@
 
     <groupId>ru.spbstu.telematics.java</groupId>
     <artifactId>Lab3</artifactId>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <url>http://maven.apache.org</url>
@@ -41,5 +42,4 @@
             <version>3.6</version>
         </dependency>
     </dependencies>
-
 </project>
