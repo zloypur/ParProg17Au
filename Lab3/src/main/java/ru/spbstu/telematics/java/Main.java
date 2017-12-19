@@ -31,8 +31,13 @@ public class Main {
             }
 
         }
-        
-        WordStats stats = new WordStats(files.toArray(new String[files.size()]));
+
+        WordStats stats = null;
+        try {
+            stats = new WordStats(files.toArray(new String[files.size()]));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Map<String, Integer> res = stats.getStatisic();
 
