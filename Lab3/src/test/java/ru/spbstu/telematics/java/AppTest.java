@@ -52,7 +52,7 @@ public class AppTest{
         Map<String, Integer> consistentStats = new TreeMap<>();
 
         for(String s : files){
-            String[] words = s.split("[\\W\0]+");
+            String[] words = s.split("[\\W]+");
 
             for (String w : words)
                 if (consistentStats.containsKey(w))
