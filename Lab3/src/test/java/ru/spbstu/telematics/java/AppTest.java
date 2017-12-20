@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -51,7 +52,7 @@ public class AppTest{
         Map<String, Integer> consistentStats = new TreeMap<>();
 
         for(String s : files){
-            String[] words = s.split("[\\W]+");
+            String[] words = s.split("[\\W\0]+");
 
             for (String w : words)
                 if (consistentStats.containsKey(w))

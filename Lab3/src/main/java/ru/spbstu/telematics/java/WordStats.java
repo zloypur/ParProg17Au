@@ -3,14 +3,18 @@ package ru.spbstu.telematics.java;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 
 public class WordStats {
 
     private Map<String, Integer> statisic;
 
+
+
     WordStats(String[] files) throws InterruptedException{
-        statisic = new TreeMap<String, Integer>();
+        statisic = new ConcurrentHashMap<>();
 
         Thread[] tr = new Thread[files.length];
 
@@ -42,7 +46,7 @@ public class WordStats {
 
         @Override
         public void run() {
-            String[] words = text.split("[\\W]+");//this regexp works only with english words
+            String[] words = text.split("[\\W\0]+");//this regexp works only with english words
 
             //for(String s : words)
               //  System.out.println(s);
@@ -60,15 +64,19 @@ public class WordStats {
                     System.out.println("Thread is interrupted");
                     return;
                 }
+                //concurent hash map
 
             for(Map.Entry<String, Integer> entry : tmpStat.entrySet())
                 if(!Thread.currentThread().isInterrupted()) {
-                    synchronized (statisic) {
+                    if(null != statisic.putIfAbsent(entry.getKey(), entry.getValue()))
+                        statisic.put(entry.getKey(), entry.getValue() + statisic.get(entry.getKey()));
+
+                    /*synchronized (statisic) {
                         if (statisic.containsKey(entry.getKey()))
                             statisic.replace(entry.getKey(), statisic.get(entry.getKey()) + entry.getValue());
                         else
                             statisic.put(entry.getKey(), entry.getValue());
-                    }
+                    }*/
                 }else {
                     System.out.println("Thread is interrupted");
                     return;
